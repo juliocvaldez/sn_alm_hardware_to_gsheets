@@ -11,7 +11,6 @@ os.system("clear")  # Linux - OSX
 pypath = os.getcwd()
 
 # Finds path of /creds directory and ServiceNow credentials
-credspath = pypath + '/creds'
 with open('creds/sn_config.json') as json_file:
     creds = json.load(json_file)
 
@@ -107,9 +106,10 @@ print('Dataframe created...')
 
 # You must have a json file in .\creds called google_secret.json
 # Download the json file from Google
-googleSheetId = '1o7IEUypqlxV9d_pi0zfwgWYgtrChdMVqyWJTIF0vips'
-sheetTabNm = 'SN_Export'
-spread = Spread('Python', googleSheetId,
+credspath = pypath + '/creds'
+googleSheetId = '1I4BoAF7zdB3QHFGMyphvp-QwLhYZ-nWsxaTIa3zuRJ0'
+sheetTabNm = 'alm_hardware'
+spread = Spread('sn_datapusher', googleSheetId,
                 0, conf.get_config(conf_dir=credspath, file_name='google_secret.json'))
 print('Spreadsheet loaded...')
 
