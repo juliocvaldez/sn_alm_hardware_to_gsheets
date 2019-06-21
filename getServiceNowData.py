@@ -1,95 +1,27 @@
 import os
 import json
 import pysnow as snow
-
-# Table to get data from
-TABLE = 'alm_hardware'
-
-# Define fields to pull from table
-FIELDS = [
-    'asset_tag',
-    'ci.host_name',
-    'ci.mac_address',
-    'company',
-    'cost',
-    'department',
-    'display_name',
-    # 'end_of_depreciation',
-    # 'end_of_life_year',
-    'install_date',
-    'install_status',
-    'invoice_number',
-    'location',
-    'model',
-    'model.depreciation',
-    'model.manufacturer',
-    'model_category',
-    'po_number',
-    'purchase_date',
-    'residual',
-    'retired',
-    'retirement_date',
-    'serial_number',
-    'substatus',
-    'u_business_services',
-    'u_uc_property_tag'
-]
-
-# Build query for table
-QUERY = (
-    snow.QueryBuilder()
-    .field('company.name').equals('INFR')
-    .OR()
-    .field('company.name').equals('NCS')
-    .OR()
-    .field('company.name').equals('ETSC')
-    .AND()
-    .field('company').order_ascending()
-    .AND()
-    .field('display_name').order_ascending()
-)
+import pandas
 
 
-def getServiceNowData(creds):
-    # Takes care of refreshing the token storage if needed
-    store = {'token': None}
+def _readFile(FILE):
+    try:
+        # Read data from file 'filename.csv'
+        data = pandas.read_csv(FILE, encoding='utf-8')
+        print('Data file read...')
+        return data
+    except:
+        print('An error occurred while attempting to read the file.')
+        return
 
-    def updater(new_token):
-        print("OAuth token refreshed!")
-        store['token'] = new_token
 
-    # Create the OAuthClient with the ServiceNow provided `client_id` and `client_secret`, and a `token_updater`
-    # function which takes care of refreshing local token storage.
-    CLIENT = snow.OAuthClient(
-        client_id=creds['CLIENT_ID'],
-        client_secret=creds['CLIENT_SECRET'],
-        token_updater=updater,
-        instance=creds['INSTANCE']
-    )
-
-    if not store['token']:
-      # No previous token exists. Generate new.
-        store['token'] = CLIENT.generate_token(
-            creds['USERNAME'], creds['PASSWORD'])
-
-    # Set the access / refresh tokens
-    CLIENT.set_token(store['token'])
-
-    # Define a resource, here we'll use the Hardware Assets table API
-    APIPATH = '/table/' + TABLE
-    assets = CLIENT.resource(api_path=APIPATH)
-
-    # Set request paramaters
-    assets.parameters.display_value = True
-    assets.parameters.exclude_reference_link = True
-
-    # Query for assets
-    SNDATA = assets.get(query=QUERY, stream=True, fields=FIELDS)
-    print('Assets received...')
-
-    # Iterate over the result and
-    SNDATALIST = []
-    for record in SNDATA.all():
-        SNDATALIST.append(record)
-
-    return SNDATALIST
+def getServiceNowData(FILEPATH):
+    print('Finding data file: ' + FILEPATH)
+    exists = os.path.isfile(FILEPATH)
+    if exists:
+        print('Data file found...')
+        data = _readFile(FILEPATH)
+        return data
+    else:
+        print('Data file was not found...')
+        return exists

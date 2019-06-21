@@ -1,5 +1,6 @@
 __pycache__
 .vscode/
+data/
 credentials/*.json
 credentials/creds
 .DS_store

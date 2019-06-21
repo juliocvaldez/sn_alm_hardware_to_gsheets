@@ -47,7 +47,6 @@ This python script was authored by Julio Valdez and Marlan Mitchell and intends 
 
 3. ### Use pip install to import following libraries:
 
-- pysnow
 - pandas
 - gspread_pandas
 
@@ -59,8 +58,17 @@ Note: you may have to use pip3 if pip is not found
 
 ## **Run the script**
 
-1. Open the terminal in the root directory ./sn_alm_hardware_to_gsheets
-2. Run the following:
-   ```terminal
-     $ python main.py
-   ```
+1. Default run:
+
+   - Open the terminal in the root directory ./sn_alm_hardware_to_gsheets
+   - Run the following:
+     ```terminal
+       $ python main.py
+     ```
+
+2. Custom filename, Google Sheet ID, or Google Sheet Page run:
+
+   - From the root directory, run the following:
+     ```terminal
+       $ python main.py assets/sn_alm_hardware.csv '<GOOGLE SHEET ID>' '<GOOGLE SHEET PAGE NAME>'
+     ```
